@@ -10,7 +10,7 @@ namespace WSAD.Service { }
 
 public static class GetEntityService
 {
-    public static Entity GetEntity()
+    public static Entity SelectEntityOption()
     {
         var doc = Autodesk.AutoCAD.ApplicationServices.Application.DocumentManager.MdiActiveDocument;
         var db = doc.Database;

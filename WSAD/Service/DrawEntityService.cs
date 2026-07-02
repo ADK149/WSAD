@@ -56,7 +56,7 @@ public static class DrawEntityService
         DrawEntity(polyline);
     }
 
-    public static void DrawPolylineBySpace(List<Point3d> points)
+    public static bool DrawPolylineBySpace(List<Point3d> points)
     {
         var doc = Application.DocumentManager.MdiActiveDocument;
         var db = doc.Database;
@@ -69,25 +69,22 @@ public static class DrawEntityService
         {
             secondPoint = points[i];
 
-            PromptStringOptions pso = new PromptStringOptions("\n按 空格键 绘制polyline，按 Enter 结束当前多段线: ");
-            pso.AllowSpaces = false; // 关键：禁止在输入字符串中包含空格，这样按下空格就会立即返回[reference:4]
-            pso.UseDefaultValue = false;
+            var pko = new PromptKeywordOptions("\n按 空格键 继续绘制，输入【X】后回车退出");
+            pko.Keywords.Add("x", "X");
+            pko.Keywords.Add("space", "SPCAE");
+            pko.Keywords.Default = "space";
+            pko.AllowNone = false;
 
-            PromptResult pr = ed.GetString(pso);
+            PromptResult pr = ed.GetKeywords(pko);
             if (pr.Status == PromptStatus.OK)
             {
+                var keyword = pr.StringResult;
+                if (keyword != "space")
+                    return false;
                 DrawPolyline(new List<Point3d> { firstPoint, secondPoint },startWidth:10,endWidth:0);
                 firstPoint = secondPoint;
-            }
-            else if (pr.Status == PromptStatus.Cancel)
-            {
-                return;
-            }
-            else
-            {
-                // 用户按了 Enter（或其他情况），结束当前多段线的绘制
-                break;
-            }
+            }           
         }
+        return true;
     }
 }

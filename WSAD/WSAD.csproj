@@ -69,5 +69,8 @@
   <ItemGroup>
     <Folder Include="View\" />
   </ItemGroup>
+  <ItemGroup>
+    <Content Include="测试数据.txt" />
+  </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
 </Project>
